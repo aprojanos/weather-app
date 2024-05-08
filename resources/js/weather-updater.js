@@ -1,68 +1,42 @@
 class WeatherUpdater {
-    eventSource;
+    
     defaultCity = 'Budapest';
-    currentLocation = {lat: 47.234, lon: 19.429};
-    waitForWeatherUpdate(callback) {
+    currentLocation = {lat: 47.234, lon: 19.429}; // centre coordinates of Hungary 
 
-        this.closeSSL();
-        this.eventSource = new EventSource('/sse');
-        var self = this;
-        this.eventSource.onmessage = function(event) {
-            console.log('Message received: ' + event.data);
-            self.closeSSL();
-            self.getForecast(callback);
-        };  
-    }
-    closeSSL() {
-        if (this.eventSource != null) {
-            this.eventSource.close();
-            this.eventSource = null;
-            console.log('eventsource closed');
-        }
-    }
+    // fetch forecast data from the server and pass it to the callback function
     getForecast(callback) {        
-        this.closeSSL();
         const locationQ = this.currentLocation.location ? `${this.currentLocation.lat} ${this.currentLocation.lon}` : this.defaultCity;
-        console.log({getForecast: locationQ});
+        //console.log({getForecast: locationQ});
         this.lastForecastLocation = locationQ;
         var self = this;
-        $.ajax({
-            url: `weather/forecast/${locationQ}`,
-            method: 'GET',
-            success: function(response) {
+        axios.get(`weather/forecast/${locationQ}`)
+            .then(function(response) {
+
                 if (self.lastForecastLocation == locationQ && callback) {
-                    callback(response);                    
-                }
-                
-            }, 
-            error: function(xhr, status, error) {
-                // Handle the error
+                    callback(response.data);                    
+                }                
+            }) 
+            .catch(function(error) {
                 console.log(error);
-              }
-            }        
-        );
+            });      
     }
+
+    // search for location and pass it to the callback
     searchForLocations(keyword, callback) {
-        this.closeSSL();
-        console.log({searchForLocation: keyword});
+        
         this.lastSearchedKeyword = keyword;
         var self = this;
-        $.ajax({
-            url: `weather/search/${keyword}`,
-            method: 'GET',
-            success: function(response) {
+
+        axios.get(`weather/search/${keyword}`)
+            .then(function(response) {
+        
                 if (keyword == self.lastSearchedKeyword && callback) {
-                    console.log({locationsFound: response});
-                    callback(response);                    
+                    callback(response.data);                    
                 }
-            }, 
-            error: function(xhr, status, error) {
-                // Handle the error
+            })
+            .catch(function(error) {
                 console.log(error);
-              }
-            }        
-        );
-    
+            });    
     }
     
 }

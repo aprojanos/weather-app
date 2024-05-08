@@ -10,7 +10,9 @@
   }
 </style>
 <div class="flex-col p-6">
-    <div style="display: flex;" class="w-full bg-slate-200 border-8 rounded-lg">
+    <div style="display: flex;" class="w-full h-16 border-slate-400 bg-slate-400 border-8 rounded-lg">
+    </div>
+    <div style="display: flex;" class="w-full bg-slate-200 border-8 rounded-lg mt-2">
         <div id="current" style="display: none;" class="w-1/3 flex-col text-orange-900">
             <div class="font-black m-10">
                 <img id="currentIcon" src="" style="width:100px;height:100px;" />

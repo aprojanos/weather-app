@@ -1,7 +1,7 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Weather Application",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
@@ -9,6 +9,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "laravel-notification-channels/webpush": "^8.0",
         "laravel/framework": "^11.0",
+        "laravel/reverb": "@beta",
         "laravel/tinker": "^2.9"
     },
     "require-dev": {

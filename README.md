@@ -13,7 +13,7 @@ Demo application for presenting real-time weather data
 
 ### Prerequisites
 
-- PHP >= 8.2
+- PHP >= 8.2 with extensions: php8.2-mysql, php8.2-xml, php8.2-dom
 - Composer
 - Node.js and npm
 

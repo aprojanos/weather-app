@@ -57,7 +57,7 @@ class WeatherCharts {
         
     }
 
-    updateAqiGauge(pm2_5, index) {
+    updateAqiGauge(pm2_5) {
         if (this.aqiGauge && !this.aqiGauge.renderer.forExport) {// aqiGauge.series[0].points[0].update(pm2_5);
             const point = this.aqiGauge.series[0].points[0];
             point.update(pm2_5);
@@ -65,6 +65,9 @@ class WeatherCharts {
         }
       
     }
+
+    // calculate air quality index 
+    // https://atmotube.com/blog/standards-for-air-quality-indices-in-different-countries-aqi
     getAqiIndex(pm2_5) {
           if (pm2_5 <= 10) return 'Good';
           if (pm2_5 <= 20) return 'Fair';
@@ -73,6 +76,7 @@ class WeatherCharts {
           if (pm2_5 <= 75) return 'Very poor';
           return 'Extremly poor';
     }
+
     createAqiGauge(divId)  {
         this.aqiGauge = Highcharts.chart(divId, {
         
@@ -118,8 +122,9 @@ class WeatherCharts {
         
                 },
                 lineWidth: 0,
-        // https://atmotube.com/blog/standards-for-air-quality-indices-in-different-countries-aqi      
-                plotBands: [{
+                
+                // colors and values by aiq index
+                plotBands: [{   
                     from: 0,
                     to: 10,
                     color: '#7cdded',
@@ -180,9 +185,6 @@ class WeatherCharts {
         
         });
     }
-
-
-
 }
 
 export default WeatherCharts;
