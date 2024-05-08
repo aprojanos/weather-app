@@ -57,7 +57,6 @@ Demo application for presenting real-time weather data
     npm run dev
     ```
 
-
 ## Usage
 After installation, access the application via http://localhost:8000 (or the port provided by php artisan serve). 
 
