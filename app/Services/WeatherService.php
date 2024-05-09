@@ -5,8 +5,8 @@ namespace App\Services;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-
-
+use App\Notifications\WeatherAlert;
+use App\Models\User;
 /**
  * Class WeatherService.
  */
@@ -62,4 +62,10 @@ class WeatherService
 
         return ['success'=>true, 'forecast'=>json_decode($response->getBody())];
     }
+
+    public static function checkSubscriptions() {
+        $user = User::find(1);
+        $user->notify( new WeatherAlert('18', 'Budapest', 'above', 12));
+    }
+
 }

@@ -1,6 +1,7 @@
 import WeatherUpdater from './weather-updater';
 import WeatherCharts from './weather-charts';
-
+import { enablePushNotifications } from './notification';
+import { disablePushNotifications } from './notification';
 
 const weatherUpdater = new WeatherUpdater();
 const weatherCharts = new WeatherCharts();
@@ -45,7 +46,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 500); 
 
+  
   }
+
+  document.getElementById('set-alert').addEventListener('click', function () {
+    const params = {
+      threshold: document.getElementById('threshold').value,
+      alert_type: document.getElementById('alert_type').value,
+      coordinates: weatherUpdater.currentLocation.location
+        ? weatherUpdater.currentLocation.lat + ' ' + weatherUpdater.currentLocation.lon
+        : weatherUpdater.defaultCity,
+      location: 
+        weatherUpdater.currentLocation.location 
+        ?? weatherUpdater.defaultCity
+    }
+    if (params.threshold && params.coordinates) {
+      enablePushNotifications(params);
+    } else {
+      alert('Please select location and set threshold for creating an alert subscription!')
+    }
+  })
+  
+  document.getElementById('remove-alert').addEventListener('click', function () {
+      disablePushNotifications();
+  })
 
   input.onclick = function(event) {
       input.select();

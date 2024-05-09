@@ -11,6 +11,14 @@
 </style>
 <div class="flex-col p-6">
     <div style="display: flex;" class="w-full h-16 border-slate-400 bg-slate-400 border-8 rounded-lg">
+        Threshold <input type="text" id="threshold" value="12"/>
+        Alert type
+        <select id="alert_type">
+            <option value="above">Above</option>
+            <option value="below">Below</option>
+        </select>
+        <button id="set-alert">Set alert</button>
+        <button id="remove-alert">Remove alert</button>
     </div>
     <div style="display: flex;" class="w-full bg-slate-200 border-8 rounded-lg mt-2">
         <div id="current" style="display: none;" class="w-1/3 flex-col text-orange-900">

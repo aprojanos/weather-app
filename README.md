@@ -64,10 +64,3 @@ After installation, access the application via http://localhost:8000 (or the por
 
 ## License
 This project is licensed under Unlicense - see the LICENSE.md file for details.
-
-## Acknowledgments
-Laravel, for the incredible PHP framework.
-Laravel Echo and Pusher, for making real-time broadcasting a breeze.
-
-
-Thank you for checking out our project.
