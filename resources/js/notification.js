@@ -7,7 +7,7 @@ if ("serviceWorker" in navigator) {
 }
 
 if (!('Notification' in window)) {
-    alert("This browser does not support notifications.");
+    Toastify({text: 'This browser does not support notifications.'}).showToast();
 }
 
 function urlBase64ToUint8Array(base64String) {
@@ -39,7 +39,7 @@ export function enablePushNotifications(params) {
             });
         }).then(subscription => {
             if (!subscription) {
-                alert("Error occured while subscribing");
+                Toastify({text: 'Error occured while subscribing.'}).showToast();
                 return;
             }
             subscribe(subscription, params);
@@ -51,11 +51,9 @@ export function disablePushNotifications() {
     navigator.serviceWorker.ready.then(registration => {
         registration.pushManager.getSubscription().then(subscription => {
             if (!subscription) {
-                alert('No subscription found.')
+                Toastify({text: 'No subscription found.'}).showToast();
                 return;
             }
-
-            console.log('Found subscription, unsubscribing...')
 
             subscription.unsubscribe().then(() => {
                 axios({
@@ -71,10 +69,11 @@ export function disablePushNotifications() {
                 })
                     .then(response => {
                         console.log('Success:', response.data);
-                        alert(response.data.message);
+                        Toastify({text: response.data.message}).showToast();
                     })
                     .catch((error) => {
                         console.error('Error:', error);
+                        Toastify({text: error.message}).showToast();
                     });
             })
         });
@@ -104,10 +103,10 @@ function subscribe(sub, params) {
     })
         .then(response => {
             console.log('Success:', response.data);
-            alert(response.data.message);
+            Toastify({text: response.data.message}).showToast();
         })
         .catch((error) => {
-            console.error('Error:', error);
+            Toastify({text: error.message}).showToast();
         });
 }
 

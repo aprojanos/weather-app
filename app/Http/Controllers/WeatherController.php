@@ -78,7 +78,7 @@ class WeatherController extends Controller {
             $req->post('auth_token'),
             $req->post('encoding'),
         );
-        return response()->json(['message' => 'Subscribed!']);
+        return response()->json(['message' => "Subscribed to weather alert: {$alert->location} -> {$alert->alert_type} {$alert->temperature} degrees"]);
     }
 
     /**
@@ -98,7 +98,7 @@ class WeatherController extends Controller {
         if ($subscription) {
             $alert->delete();
             $subscription->delete();
-            return response()->json(['message' => 'Unsubscribed!']);
+            return response()->json(['message' => 'Unsubscribed from weather alert']);
         }
 
         return response()->json(['message' => 'Not subscribed!']);

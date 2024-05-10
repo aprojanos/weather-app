@@ -12,7 +12,7 @@ Artisan::command('inspire', function () {
 
 Schedule::call(function () {
     WeatherUpdateEvent::dispatch('reload');
-})->everyFifteenMinutes();
+})->everyMinute();
 
 Schedule::call(function () {
     WeatherService::checkAlertNotifications();

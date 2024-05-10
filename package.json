@@ -21,6 +21,7 @@
         "chartjs-plugin-datalabels": "^2.2.0",
         "highcharts": "^11.4.1",
         "jquery": "^3.7.1",
-        "leaflet": "^1.9.4"
+        "leaflet": "^1.9.4",
+        "toastify-js": "^1.12.0"
     }
 }

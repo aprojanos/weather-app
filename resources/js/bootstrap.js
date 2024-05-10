@@ -4,10 +4,11 @@ import Highcharts from 'highcharts';
 import highchartsMore from 'highcharts/highcharts-more';
 highchartsMore(Highcharts);
 import './weather-charts';
+import Toastify from 'toastify-js'
 window.axios = axios;
 window.Highcharts = Highcharts;
 window.L = L;
-
+window.Toastify = Toastify;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

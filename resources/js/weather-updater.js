@@ -1,11 +1,11 @@
 class WeatherUpdater {
     
     defaultCity = 'Budapest';
-    currentLocation = {lat: 47.234, lon: 19.429}; // centre coordinates of Hungary 
+    currentLocation = null;    
 
     // fetch forecast data from the server and pass it to the callback function
     getForecast(callback) {        
-        const locationQ = this.currentLocation.location ? `${this.currentLocation.lat} ${this.currentLocation.lon}` : this.defaultCity;
+        const locationQ = this.currentLocation ? `${this.currentLocation.lat} ${this.currentLocation.lon}` : this.defaultCity;
         //console.log({getForecast: locationQ});
         this.lastForecastLocation = locationQ;
         var self = this;
@@ -13,6 +13,11 @@ class WeatherUpdater {
             .then(function(response) {
 
                 if (self.lastForecastLocation == locationQ && callback) {
+                    self.currentLocation = {
+                        location: response.data.forecast.location.name,
+                        lat: response.data.forecast.location.lat,
+                        lon: response.data.forecast.location.lon,
+                    };
                     callback(response.data);                    
                 }                
             }) 

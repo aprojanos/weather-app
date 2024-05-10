@@ -10,7 +10,7 @@
   }
 </style>
 <div class="flex-col p-6">
-    <div class="flex items-baseline justify-end space-x-2 w-full h-16 border-slate-400 bg-slate-400 border-8 rounded-lg">
+    <div class="flex items-baseline justify-start space-x-2 w-full h-16 border-slate-400 bg-slate-400 border-8 rounded-lg">
         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
             Threshold
         </label>

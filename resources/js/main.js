@@ -6,10 +6,12 @@ import { disablePushNotifications } from './notification';
 const weatherUpdater = new WeatherUpdater();
 const weatherCharts = new WeatherCharts();
 
-
 let map;
 let lastSearchedKeyword;
+let initalLocationSet = false;
+let defaultPosition = {lat: 47.234, lon: 19.429}; // centre coordinates of Hungary 
 
+// initialize dashboard elements when document was loaded
 document.addEventListener('DOMContentLoaded', function() {
 
   // initialize map
@@ -22,12 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }).addTo(map);
 
   map.on('locationfound', function(ev) { // use current location for forecast if available
-        console.log('location found', ev.latlng);
       setForecastLocation({lat: ev.latlng.lat, lon: ev.latlng.lng});
+      initalLocationSet = true;
+      Toastify({text: 'Get weather data for the current location!'}).showToast();
   });
   map.on('locationerror', function(ev) { // use default location for forecast
-    console.log('location error');
-      setForecastLocation();
+    setTimeout(function() {
+      if (!initalLocationSet) {
+        setForecastLocation();
+        initalLocationSet = true
+        Toastify({text: 'Get weather data for the default location!'}).showToast();
+      }
+    }, 1000);
   });
 
   map.locate();
@@ -47,25 +55,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }, 500);
-
-
   }
 
+  // initialize constrols for push notification subscription
   document.getElementById('set-alert').addEventListener('click', function () {
     const params = {
       threshold: document.getElementById('threshold').value,
       alert_type: document.getElementById('alert_type').value,
-      coordinates: weatherUpdater.currentLocation.location
+      coordinates: weatherUpdater.currentLocation
         ? weatherUpdater.currentLocation.lat + ' ' + weatherUpdater.currentLocation.lon
         : weatherUpdater.defaultCity,
       location:
-        weatherUpdater.currentLocation.location
+        weatherUpdater.currentLocation?.location
         ?? weatherUpdater.defaultCity
     }
     if (params.threshold && params.coordinates) {
       enablePushNotifications(params);
     } else {
-      alert('Please select location and set threshold for creating an alert subscription!')
+      Toastify({text: 'Please select location and set threshold for creating an alert subscription!'}).showToast();
     }
   })
 
@@ -83,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // listen to websocket events
   window.Echo.channel('weather-channel')
  .listen('WeatherUpdateEvent', (e) => {
+    Toastify({text: 'Weather data are updated.'}).showToast();
     weatherUpdater.getForecast(updateView);
  });
 
@@ -93,17 +101,20 @@ function setForecastLocation(l) {
 
     let zoomLevel = l ? 13 : 6;
 
+    let mapLocation = l ? {lat: l.lat, lon: l.lon} : defaultPosition;
+
     if (l != undefined) {
       weatherUpdater.currentLocation = l
     }
 
+    weatherUpdater.getForecast(updateView);
+
     map.setView(
-      new L.LatLng(weatherUpdater.currentLocation.lat, weatherUpdater.currentLocation.lon),
+      new L.LatLng(mapLocation.lat, mapLocation.lon),
       zoomLevel,
       {animate: true, duration: 1}
     );
 
-    weatherUpdater.getForecast(updateView);
 
 }
 
