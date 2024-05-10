@@ -20,10 +20,6 @@ class CreatePushSubscriptionsTable extends Migration
             $table->string('public_key')->nullable();
             $table->string('auth_token')->nullable();
             $table->string('content_encoding')->nullable();
-            $table->string('location')->nullable();
-            $table->string('coordinates')->nullable();
-            $table->enum('alert_type', ['below', 'above'])->defaul('above');
-            $table->integer('temperature')->nullable();
             $table->timestamps();
         });
     }

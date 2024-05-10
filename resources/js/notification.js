@@ -29,7 +29,7 @@ export function enablePushNotifications(params) {
             if (subscription) {
                 console.log('Subscription already exists.')
                 return subscription;
-            }            
+            }
             console.log('VITE_VAPID_PUBLIC_KEY', import.meta.env.VITE_VAPID_PUBLIC_KEY);
             const serverKey = urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY);
 
@@ -51,7 +51,7 @@ export function disablePushNotifications() {
     navigator.serviceWorker.ready.then(registration => {
         registration.pushManager.getSubscription().then(subscription => {
             if (!subscription) {
-                console.log('No subscription found.')
+                alert('No subscription found.')
                 return;
             }
 

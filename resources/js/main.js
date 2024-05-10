@@ -14,39 +14,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // initialize map
   map = L.map('map');
- 
+
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 18,
       id: 'osm'
-  }).addTo(map);    
+  }).addTo(map);
 
   map.on('locationfound', function(ev) { // use current location for forecast if available
       setForecastLocation({lat: ev.latlng.lat, lon: ev.latlng.lng});
   });
   map.on('locationerror', function(ev) { // use default location for forecast
-      setForecastLocation();        
+      setForecastLocation();
   });
 
-  map.locate();    
+  map.locate();
 
-  // initialize autocomplete 
+  // initialize autocomplete
   let input = document.querySelector("#autocompleteInput");
-  
-  input.onkeyup = function(event) {        
+
+  input.onkeyup = function(event) {
 
     let keyword = event.target.value;
     lastSearchedKeyword = keyword;
 
     setTimeout(function() {
-        if (lastSearchedKeyword == keyword) {          
+        if (lastSearchedKeyword == keyword) {
             weatherUpdater.searchForLocations(keyword, function(response) {
               renderLocations(response);
             });
         }
-    }, 500); 
+    }, 500);
 
-  
+
   }
 
   document.getElementById('set-alert').addEventListener('click', function () {
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
       coordinates: weatherUpdater.currentLocation.location
         ? weatherUpdater.currentLocation.lat + ' ' + weatherUpdater.currentLocation.lon
         : weatherUpdater.defaultCity,
-      location: 
-        weatherUpdater.currentLocation.location 
+      location:
+        weatherUpdater.currentLocation.location
         ?? weatherUpdater.defaultCity
     }
     if (params.threshold && params.coordinates) {
@@ -66,24 +66,22 @@ document.addEventListener('DOMContentLoaded', function() {
       alert('Please select location and set threshold for creating an alert subscription!')
     }
   })
-  
+
   document.getElementById('remove-alert').addEventListener('click', function () {
       disablePushNotifications();
   })
 
   input.onclick = function(event) {
       input.select();
-  }    
+  }
 
   // initialize gauge for air quality data
   weatherCharts.createAqiGauge('aqiGauge');
 
   // listen to websocket events
   window.Echo.channel('weather-channel')
- .listen('WeatherUpdate', (e) => {
+ .listen('WeatherUpdateEvent', (e) => {
     weatherUpdater.getForecast(updateView);
- }).listen('WeatherAlert', (e) => {
-    console.log({WeatherAlert: e});
  });
 
 });
@@ -92,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function setForecastLocation(l) {
 
     let zoomLevel = l ? 13 : 6;
-  
+
     if (l != undefined) {
       weatherUpdater.currentLocation = l
     }
@@ -101,10 +99,10 @@ function setForecastLocation(l) {
       new L.LatLng(weatherUpdater.currentLocation.lat, weatherUpdater.currentLocation.lon),
       zoomLevel,
       {animate: true, duration: 1}
-    ); 
+    );
 
     weatherUpdater.getForecast(updateView);
-  
+
 }
 
 // populate location dropdown
@@ -130,9 +128,9 @@ function renderLocations(options) {
 
 // location selected: hide dropdown, set location input and pass location to forecast
 function selectLocation(l) {
-  
+
   showAutocompleteDropdown(false);
-  
+
   setForecastLocation(l);
 
   let input = document.querySelector("#autocompleteInput");
@@ -153,19 +151,19 @@ function showAutocompleteDropdown(show) {
   if (show == undefined || show) {
       dropdownEl.classList.remove("hidden");
   } else {
-      dropdownEl.classList.add("hidden");                
+      dropdownEl.classList.add("hidden");
   }
 
 }
 
 // update the weather dashboard after retrieving the data from the server
 function updateView(data) {
-  
+
   weatherCharts.updateAqiGauge(data.forecast.current?.air_quality?.pm2_5);
 
   updateHourlyForecast(data.forecast.location, data.forecast.forecast.forecastday);
 
-  updateCurrent(data.forecast.location, data.forecast.current);  
+  updateCurrent(data.forecast.location, data.forecast.current);
 
 }
 
@@ -189,22 +187,22 @@ function updateHourlyForecast(location, days) {
   let bgColorNight = 'lightcyan';
   let borderColorDay = 'rgba(150, 150, 150, 0.2)';
   let borderColorNight = 'rgba(20, 20, 20, 0.2)';
-  
+
   let today = true;
   let ldt = new Date(location.localtime_epoch * 1000) // current hour in location's time zone
   .toLocaleTimeString('hu-HU', {hour: '2-digit', timeZone: location.tz_id});
-  
+
   let data = [];
 
-  for (let daily of days) {    
+  for (let daily of days) {
 
-    for (let hourData of daily.hour) {      
-      
+    for (let hourData of daily.hour) {
+
       let dt = new Date(hourData.time_epoch * 1000) // forecast hour in location's time zone
         .toLocaleTimeString('hu-HU', {hour: '2-digit', timeZone: location.tz_id});
 
       if (today && dt <= ldt) continue; // it is not necessary to forecast in the past
-    
+
       data.push({
         temp_c: hourData.temp_c,
         hour: `${dt}:00`,
@@ -217,7 +215,7 @@ function updateHourlyForecast(location, days) {
 
     today = false;
   }
-  
+
   weatherCharts.hourlyForecastBars('hourlyForecastBars', data);
 
 }

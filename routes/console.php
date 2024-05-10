@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
-use App\Events\WeatherUpdate;
+use App\Events\WeatherUpdateEvent;
 use App\Services\WeatherService;
 
 Artisan::command('inspire', function () {
@@ -11,9 +11,9 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::call(function () {
-    WeatherUpdate::dispatch('reload');
+    WeatherUpdateEvent::dispatch('reload');
 })->everyFifteenMinutes();
 
 Schedule::call(function () {
-    WeatherService::checkSubscriptions();
-})->everyTenSeconds();
+    WeatherService::checkAlertNotifications();
+})->everyMinute();

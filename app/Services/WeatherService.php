@@ -2,19 +2,31 @@
 
 namespace App\Services;
 
+
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use App\Notifications\WeatherAlert;
+use App\Notifications\WeatherAlertNotification;
 use App\Models\User;
+use App\Models\WeatherAlert;
+
 /**
  * Class WeatherService.
  */
 class WeatherService
+/**
+ * Provides methods for interacting with a weather API, including searching for locations, fetching weather forecasts, and sending weather alert notifications to users.
+ */
 {
     protected static $client;
 
-    protected static function getClient(): Client {
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+    protected static function getClient(): Client
+    {
 
         if (static::$client == null) {
             static::$client = new Client();
@@ -23,11 +35,8 @@ class WeatherService
         return static::$client;
     }
 
-    public function __construct(Client $client) {
-        $this->client = $client;
-    }
-
-    public static function search(string $q) { 
+    public static function search(string $q)
+    {
         try {
             $response = self::getClient()->get(env('WEATHER_API_URL') . 'search.json', [
                 'query' => [
@@ -35,14 +44,14 @@ class WeatherService
                     'q' => "{$q}*",
                 ],
             ]);
-            return ['success'=>true, 'locations'=>json_decode($response->getBody())];
+            return ['success' => true, 'locations' => json_decode($response->getBody())];
         } catch (ClientException $e) {
             return ['success' => false, 'message' => json_decode($e->getResponse()->getBody())->error];
         }
-
     }
 
-    public static function forecast(string $location, string $lang = 'en') {   
+    public static function forecast(string $location, string $lang = 'en')
+    {
 
         try {
             $response = self::getClient()->get(env('WEATHER_API_URL') . 'forecast.json', [
@@ -60,12 +69,44 @@ class WeatherService
             return ['success' => false, 'message' => json_decode($e->getResponse()->getBody())->error];
         }
 
-        return ['success'=>true, 'forecast'=>json_decode($response->getBody())];
+        return ['success' => true, 'forecast' => json_decode($response->getBody())];
     }
 
-    public static function checkSubscriptions() {
-        $user = User::find(1);
-        $user->notify( new WeatherAlert('18', 'Budapest', 'above', 12));
+    public static function current(string $location, string $lang = 'en')
+    {
+
+        try {
+            $response = self::getClient()->get(env('WEATHER_API_URL') . 'current.json', [
+                'query' => [
+                    'key' => env('WEATHER_API_KEY'),
+                    'q' => $location,
+                    'lang' => $lang,
+                    'aqi' => 'yes',
+                    'alerts' => 'no',
+                ],
+            ]);
+        } catch (ClientException $e) {
+            return ['success' => false, 'message' => json_decode($e->getResponse()->getBody())->error];
+        }
+
+        return ['success' => true, 'weather' => json_decode($response->getBody())];
     }
+
+    public static function checkAlertNotifications()
+    {
+        foreach(WeatherAlert::all() as $alert) {
+            $result = WeatherService::current($alert->location);
+            if ($result['success']) {
+                $temp_c = $result['weather']->current->temp_c;
+                if ($alert->alert_type == 'above' && $temp_c > $alert->temperature
+                    || $alert->alert_type == 'below' && $temp_c < $alert->temperature
+                ) {
+                    print "notify: $alert->id ($temp_c, $alert->location, $alert->alert_type, $alert->temperature)";
+                    $alert->notify(new WeatherAlertNotification($temp_c, $alert->location, $alert->alert_type, $alert->temperature));
+                }
+            }
+        }
+    }
+
 
 }

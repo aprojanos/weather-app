@@ -7,7 +7,7 @@ use NotificationChannels\WebPush\WebPushChannel;
 use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Notification;
 
-class WeatherAlert extends Notification
+class WeatherAlertNotification extends Notification
 {
     use Queueable;
 
@@ -15,7 +15,7 @@ class WeatherAlert extends Notification
     protected $location;
     protected $alert_type;
     protected $threshold;
-    
+
     /**
      * Create a new notification instance.
      */
