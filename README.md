@@ -13,7 +13,7 @@ Demo application for presenting real-time weather data
 
 ### Prerequisites
 
-- PHP >= 8.2 with extensions: php8.2-mysql, php8.2-xml, php8.2-dom
+- PHP >= 8.2 with extensions: mysql, xml, dom, gmp
 - Composer
 - Node.js and npm
 
@@ -35,10 +35,13 @@ Demo application for presenting real-time weather data
 4. Copy the example environment file and make the required configuration adjustments:
     ```
     cp .env.example .env
+    
+    database connection
     ```
-5. Generate an application key:
+5. Generate an application and vapid keys:
     ```
     php artisan key:generate
+    php artisan webpush:vapid
     ```
 6. Start the Laravel development server:
     ```
@@ -56,6 +59,11 @@ Demo application for presenting real-time weather data
     ```
     npm run dev
     ```
+10. set up a crontab:
+    ```
+    * * * * * cd {path_to_project} && php artisan schedule:run >> /dev/null 2>&1
+    ```
+
 
 ## Usage
 After installation, access the application via http://localhost:8000 (or the port provided by php artisan serve). 
