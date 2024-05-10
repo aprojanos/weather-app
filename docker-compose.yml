@@ -1,0 +1,9 @@
+#docker-compose.yaml
+version: "3.0"
+services:
+  weather-app:
+    build: .
+    image: janosapro/weather-app
+    container_name: weather-app
+    ports:
+      - "80:80"

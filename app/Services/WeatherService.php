@@ -103,6 +103,8 @@ class WeatherService
                 ) {
                     print "notify: $alert->id ($temp_c, $alert->location, $alert->alert_type, $alert->temperature)";
                     $alert->notify(new WeatherAlertNotification($temp_c, $alert->location, $alert->alert_type, $alert->temperature));
+                } else {
+                    print "notification not needed: $alert->id ($temp_c, $alert->location, $alert->alert_type, $alert->temperature)";
                 }
             }
         }

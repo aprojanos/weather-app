@@ -22,9 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }).addTo(map);
 
   map.on('locationfound', function(ev) { // use current location for forecast if available
+        console.log('location found', ev.latlng);
       setForecastLocation({lat: ev.latlng.lat, lon: ev.latlng.lng});
   });
   map.on('locationerror', function(ev) { // use default location for forecast
+    console.log('location error');
       setForecastLocation();
   });
 
