@@ -1,5 +1,5 @@
 # weather-app
-Demo application for presenting real-time weather data
+Demo application for real-time weather data presentation
 
 ## Features
 
@@ -36,10 +36,10 @@ Demo application for presenting real-time weather data
     ```
     cp .env.example .env   
     ```
-   APP_URL
-   database connection - DB_* variables
-   WEATHER_API_KEY retrieved from [https://api.weatherapi.com](https://www.weatherapi.com/)
-   reverb app settings REVERB_* variables
+   - APP_URL
+   - database connection - DB_* variables
+   - WEATHER_API_KEY retrieved from [https://api.weatherapi.com](https://www.weatherapi.com/)
+   - reverb app settings REVERB_* variables
 
 6. Generate an application and vapid keys:
     ```
