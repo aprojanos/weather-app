@@ -23,6 +23,11 @@ class WeatherAlert extends Model
 
     use HasFactory;
 
+    /**
+     * Get the subcription record associated with the WeatherAlert.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function subcription() {
         return $this->hasOne(WeatherPushSubscription::class, 'subscribable_id');
     }

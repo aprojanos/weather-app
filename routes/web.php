@@ -13,7 +13,7 @@ Route::get('/weather/forecast/{location}/{lang?}', [WeatherController::class, 'f
 Route::post('/weather/subscribe', [WeatherController::class, 'subscribe']);
 Route::post('/weather/unsubscribe', [WeatherController::class, 'unsubscribe']);
 
-Route::get('/test', [WeatherController::class, 'test']);
+// Route::get('/test', [WeatherController::class, 'test']);
 
 
 Route::get('/sse', [SSEController::class, 'stream']);

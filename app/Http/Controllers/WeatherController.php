@@ -65,7 +65,6 @@ class WeatherController extends Controller {
     public function subscribe(Request $req)
     {
         $alert = WeatherAlert::create([
-          //  'weather_push_subscription_id' => $subscription->id,
             'location' => $req->post('location'),
             'coordinates' => $req->post('coordinates'),
             'alert_type' => $req->post('alert_type'),
@@ -88,8 +87,7 @@ class WeatherController extends Controller {
      * @return \Illuminate\Http\JsonResponse A JSON response indicating the unsubscription was successful.
      */
     public function unsubscribe(Request $req)
-    {
-        $user = User::find(1);
+    {        
         $alert = WeatherAlert::with('subcription')->whereHas('subcription', function($q) use($req) {
             $q->where('endpoint', $req->post('endpoint'));
         })->first();
@@ -105,6 +103,9 @@ class WeatherController extends Controller {
 
     }
 
+    /**
+     * debugging stuff
+     */
     public function test() {
         WeatherService::checkAlertNotifications();
     }

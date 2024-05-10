@@ -2,10 +2,12 @@
 
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
-
+/**
+ * Define the broadcast channel for the weather-channel.
+ *
+ * @param  \Illuminate\Support\Collection|null  $user
+ * @return bool
+ */
 Broadcast::channel('weather-channel', function ($user) {
     return true;
 });

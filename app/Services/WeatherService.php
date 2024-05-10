@@ -20,14 +20,23 @@ class WeatherService
 {
     protected static $client;
 
+    /**
+     * WeatherService constructor.
+     *
+     * @param Client $client The GuzzleHttp Client instance for making HTTP requests to the weather API.
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * Retrieves the GuzzleHttp Client instance for making HTTP requests to the weather API.
+     *
+     * @return Client The GuzzleHttp Client instance.
+     */
     protected static function getClient(): Client
     {
-
         if (static::$client == null) {
             static::$client = new Client();
         }
@@ -35,8 +44,18 @@ class WeatherService
         return static::$client;
     }
 
-    public static function search(string $q)
-    {
+    /**
+     * Searches for locations based on the provided query.
+     *
+     * @param string $q The query string to search for locations.
+     *
+     * @return array An associative array containing the following keys:
+     *  - success: A boolean indicating whether the search was successful.
+     *  - locations: An array of location objects returned by the weather API.
+     *
+     * @throws ClientException If an error occurs while making the HTTP request to the weather API.
+     */
+    public static function search(string $q): array {
         try {
             $response = self::getClient()->get(env('WEATHER_API_URL') . 'search.json', [
                 'query' => [
@@ -50,9 +69,19 @@ class WeatherService
         }
     }
 
-    public static function forecast(string $location, string $lang = 'en')
-    {
-
+    /**
+     * Retrieves the weather forecast for a given location.
+     *
+     * @param string $location The location for which to retrieve the forecast.
+     * @param string $lang The language code for the forecast data. Defaults to 'en' (English).
+     *
+     * @return array An associative array containing the following keys:
+     *  - success: A boolean indicating whether the forecast retrieval was successful.
+     *  - forecast: An array of forecast data returned by the weather API.
+     *
+     * @throws ClientException If an error occurs while making the HTTP request to the weather API.
+     */
+    public static function forecast(string $location, string $lang = 'en'): array {
         try {
             $response = self::getClient()->get(env('WEATHER_API_URL') . 'forecast.json', [
                 'query' => [
@@ -72,9 +101,19 @@ class WeatherService
         return ['success' => true, 'forecast' => json_decode($response->getBody())];
     }
 
-    public static function current(string $location, string $lang = 'en')
-    {
-
+    /**
+     * Retrieves the current weather for a given location.
+     *
+     * @param string $location The location for which to retrieve the current weather.
+     * @param string $lang The language code for the weather data. Defaults to 'en' (English).
+     *
+     * @return array An associative array containing the following keys:
+     *  - success: A boolean indicating whether the current weather retrieval was successful.
+     *  - weather: An array of current weather data returned by the weather API.
+     *
+     * @throws ClientException If an error occurs while making the HTTP request to the weather API.
+     */
+    public static function current(string $location, string $lang = 'en'): array {
         try {
             $response = self::getClient()->get(env('WEATHER_API_URL') . 'current.json', [
                 'query' => [
@@ -92,6 +131,9 @@ class WeatherService
         return ['success' => true, 'weather' => json_decode($response->getBody())];
     }
 
+    /**
+     * Checks all the weather alerts and sends notifications if necessary.
+     */
     public static function checkAlertNotifications()
     {
         foreach(WeatherAlert::all() as $alert) {

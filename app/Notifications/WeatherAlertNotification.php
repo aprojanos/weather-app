@@ -38,7 +38,7 @@ class WeatherAlertNotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Get the push representation of the notification.
      */
     public function toWebPush($notifiable)
     {
