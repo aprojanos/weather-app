@@ -8,6 +8,7 @@ Demo application for real-time weather data presentation
 - Air quality data
 - Show location on map
 - Update data according to server-side schedule
+- Subcription for weather alerts - temperature above/below the given threshold at a selected location
 
 ## Installation
 
